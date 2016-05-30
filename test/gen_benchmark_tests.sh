@@ -19,5 +19,5 @@ TEST_P(BenchmarkTest, test_0)
     cerr << GetParam() << endl;
 }
 
-INSTANTIATE_TEST_CASE_P(T1, BenchmarkTest, ::testing::Values($BENCHMARKS));
+INSTANTIATE_TEST_CASE_P(T1, BenchmarkTest, ::testing::Values("$BENCHMARKS"));
 EOF

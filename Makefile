@@ -1,4 +1,5 @@
-CXXFLAGS = -std=c++11 -Og -g
+CXX = g++-mp-5
+CXXFLAGS = -std=c++11
 PROJ_DIR := $(shell pwd)
 
 $(shell mkdir -p ${PROJ_DIR}/bin)
