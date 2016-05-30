@@ -20,15 +20,11 @@ bool solve_sat(std::size_t numvar, std::vector<std::vector<int>> &clauses, std::
 
 	assignments.emplace_back(1);
 	clauses.emplace_back(std::initializer_list<int>{static_cast<int>(assignments.size())});
-
 	bool possible;
 	std::vector<std::vector<int>> up_clauses;
-
 	std::tie(possible, up_clauses) = unit_propagation(clauses, numvar);
-
 	if(possible && solve_sat(numvar, up_clauses, assignments))
 		return true;
-
 	assignments.back() = -1;
 	clauses.back().front() = -static_cast<int>(assignments.size());
 
