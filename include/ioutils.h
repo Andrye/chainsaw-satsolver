@@ -29,9 +29,11 @@ class dimacsIO
                 ostr << std::endl;
             }
 
-        //        template <typename ClauseType>
+        template <typename ClauseType>
         void read() const
         {
+            typedef typename ClauseType::literal_type literal_type;
+
             char op;
             std::string s1, s2;
             uint32_t i1, i2;
@@ -51,8 +53,7 @@ class dimacsIO
                         printComment(" solving " + s1 + " formula with " +
                                 std::to_string(i1) + " variables and " + std::to_string(i2) + " caluses");
 #endif
-                        //                      readFormula<ClauseType>();
-                        readFormula();
+                        readFormula<literal_type>();
                         break;
                     default:
                         errstr << "[ ERROR ] Bad format!!!\n";
@@ -62,17 +63,17 @@ class dimacsIO
         }
 
     private:
-        //        template <typename T>
+        template <typename literal_type>
         void readFormula() const
         {
-            int32_t v1;
-            std::vector<int32_t> clause;
+            literal_type v1;
+            std::vector<literal_type> clause;
             while (istr >> v1)
             {
                 if (!v1)
                 {
                     printComment(std::accumulate(clause.begin(), clause.end(), std::string{},
-                                [&](const std::string& s, const int32_t& i)
+                                [&](const std::string& s, const decltype(v1)& i)
                                 { return s + " " + std::to_string(i); }));
                     clause.clear();
                     continue;
@@ -88,7 +89,5 @@ class dimacsIO
 
 typedef dimacsIO<std::istream, std::ostream, std::ostream> cdimacsIO;
 typedef dimacsIO<std::fstream, std::fstream, std::fstream> fdimacsIO;
-
-cdimacsIO io(std::cin, std::cout, std::cerr);
 
 #endif // _IO_UTILS_H

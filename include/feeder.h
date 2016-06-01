@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <numeric>
 #include <vector>
-
+/*
 class simpleVarsFeeder
 {
     simpleVarsFeeder(const uint32_t varsQnty) {}
@@ -27,7 +27,7 @@ class VSIDSVarsFeeder
 
     void reprocessCurrentState()
     {
-        make_heap(varsQueue.begin(), varsQueue.end(), 
+        make_heap(varsQueue.begin(), varsQueue.end(),
                 [&](const int32_t& idxa, const int32_t& idxb)
                 {
                 return occur[idxa] < occur[idxb];
@@ -43,5 +43,5 @@ class VSIDSVarsFeeder
     std::vector<int32_t> occur;
     std::vector<int32_t> varsQueue;
 };
-
+*/
 #endif // _FEEDER_H

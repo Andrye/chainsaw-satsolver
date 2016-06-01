@@ -16,13 +16,13 @@ template <typename T>
 class usage_timer
 {
     public:
-    static void addInterval(const _duration& d)
-    {
-        computation_time += d;
-    }
+        static void addInterval(const _duration& d)
+        {
+            computation_time += d;
+        }
 
     private:
-    static _duration computation_time;
+        static _duration computation_time;
 };
 
 template <typename T>
@@ -44,20 +44,20 @@ class timed_frame
     private:
         void print_duration() const {
             chrono::duration<_duration> elapsed_time(_clock::now() - _frame_start);
-            io.printComment("elapsed time : " + std::to_string(elapsed_time.count()) + "s");
+            //io.printComment("elapsed time : " + std::to_string(elapsed_time.count()) + "s");
         }
 
-chrono::time_point<_clock> _frame_start;
+        chrono::time_point<_clock> _frame_start;
 };
 
 # ifndef VERBOSE
-    #define PROFILE_FRAME_BEGIN
-    #define PROFILE_TAG
-    #define PROFILE_FRAME_END
+#define PROFILE_FRAME_BEGIN
+#define PROFILE_TAG
+#define PROFILE_FRAME_END
 # else
-    #define PROFILE_FRAME_BEGIN do{ timed_frame _timed_obj
-    #define PROFILE_TAG do{ _timed_obj.insert_check(); } while(false)
-    #define PROFILE_FRAME_END  } while(false)
+#define PROFILE_FRAME_BEGIN do{ timed_frame _timed_obj
+#define PROFILE_TAG do{ _timed_obj.insert_check(); } while(false)
+#define PROFILE_FRAME_END  } while(false)
 # endif
 
 #endif // _PROFILER_H
