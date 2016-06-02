@@ -2,7 +2,6 @@
 
 TEST_PATH=`pwd`
 BENCHMARKS=$(ls benchmarks | sed 's:\(\<.*\>\):"'"$TEST_PATH"'\/benchmarks\/\1":g' | tr "\n" "," | sed 's/,$//')
-
 cat << EOF > $1
 
 #include "gtest/gtest.h"

@@ -1,13 +1,15 @@
 #include "sat_include_all.h"
-#include <unistd.h>
-#include <sstream>
+#include <iostream>
 
-int main(int argc, char* argv[])
+int main()
 {
-    stringstream sstr;
-    sstr << "c to jest komentarz" << std::endl;
-    sstr << "c to jest drugi komentarz" << std::endl;
-    sstr << "p cnf 77 12";
-    dimacsIO<std::stringstream, std::ostream, std::ostream> _io(sstr, std::cout, std::cerr);
-    _io.read<clause>();
+    cdimacsIO io(std::cin, std::cout, std::cerr);
+
+    solver<cdimacsIO,
+           clause,
+           valuation<TriBool>,
+           simpleLiteralFeeder< computation_context <clause, valuation<TriBool>>>
+          > solver(io);
+    solver.fillFormula();
+    solver.run();
 }

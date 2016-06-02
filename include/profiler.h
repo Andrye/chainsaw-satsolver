@@ -4,12 +4,11 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <string>
 
 #include "ioutils.h"
 
-using namespace std;
-
-typedef chrono::steady_clock _clock;
+typedef std::chrono::steady_clock _clock;
 typedef double _duration;
 
 template <typename T>
@@ -31,7 +30,7 @@ _duration usage_timer<T>::computation_time(0);
 class timed_frame
 {
     public:
-        timed_frame() : _frame_start(_clock::now()) {
+        timed_frame(const std::string& _message = "") : _frame_start(_clock::now()), message(_message) {
         }
 
         ~timed_frame() {
@@ -43,11 +42,12 @@ class timed_frame
         }
     private:
         void print_duration() const {
-            chrono::duration<_duration> elapsed_time(_clock::now() - _frame_start);
-            //io.printComment("elapsed time : " + std::to_string(elapsed_time.count()) + "s");
+            std::chrono::duration<_duration> elapsed_time(_clock::now() - _frame_start);
+//            io.printComment(message + "elapsed time : " + std::to_string(elapsed_time.count()) + "s");
         }
 
-        chrono::time_point<_clock> _frame_start;
+        std::chrono::time_point<_clock> _frame_start;
+        std::string message;
 };
 
 # ifndef VERBOSE

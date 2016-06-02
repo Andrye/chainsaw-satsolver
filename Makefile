@@ -28,7 +28,7 @@ debug: clean
 test:
 	$(MAKE) -C test
 
-runtest: test
+runtest: cleanall test
 	@./test/bin/test.x
 
 satori:

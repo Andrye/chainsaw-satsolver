@@ -4,14 +4,35 @@
 #include <algorithm>
 #include <numeric>
 #include <vector>
-/*
-class simpleVarsFeeder
-{
-    simpleVarsFeeder(const uint32_t varsQnty) {}
 
+#include "solver.h"
+
+template <typename ComputationContext>
+class simpleLiteralFeeder
+{
+    public:
+    typedef typename ComputationContext::literal_type literal_type;
+
+    simpleLiteralFeeder(ComputationContext& _ctx) :
+        idx(1),
+        varBound(_ctx.numVars)
+    {
+    }
+
+    literal_type getLiteral() {
+        return (varBound >= idx) ? idx++ : 0;
+    }
+    
+    TriBool getValuation(const literal_type) const {
+        return TRUE;
+    }
+        
+    literal_type idx;
+    literal_type varBound;
 };
 
-class VSIDSVarsFeeder
+/*
+class VSIDSLiteralFeeder
 {
     VarsFeeder(const uint32_t& varsQnty) : occur(varsQnty << 1, 0), varsQueue()
     {

@@ -8,6 +8,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <numeric>
+#include <utility>
 #include <vector>
 
 template <typename ISTR, typename OSTR, typename ERRSTR>
@@ -23,64 +24,58 @@ class dimacsIO
 
         template <typename Val>
             void printResult(const Val& val) const {
-                ostr << "v ";
-                for (const auto& v : val)
-                    ostr << v << " ";
-                ostr << std::endl;
+                ostr << "v " << val << std::endl;
             }
 
-        template <typename ClauseType>
-        void read() const
-        {
-            typedef typename ClauseType::literal_type literal_type;
-
-            char op;
-            std::string s1, s2;
-            uint32_t i1, i2;
-            while (istr >> op)
+        template <typename Context, typename Formula>
+            void read(Context& ctx, Formula& formula) const
             {
-                switch (op)
+                char op;
+                std::string s1, s2;
+                while (istr >> op)
                 {
-                    case 'c':
-                        getline(istr, s1);
+                    switch (op)
+                    {
+                        case 'c':
+                            getline(istr, s1);
 #ifdef VERBOSE
-                        printComment(s1);
+                            printComment(s1);
 #endif
-                        break;
-                    case 'p':
-                        istr >> s1 >> i1 >> i2;
+                            break;
+                        case 'p':
+                            istr >> s1 >> ctx.numVars >> ctx.numClauses;
 #ifdef VERBOSE
-                        printComment(" solving " + s1 + " formula with " +
-                                std::to_string(i1) + " variables and " + std::to_string(i2) + " caluses");
+                            printComment(" solving " + s1 + " formula with " +
+                                    std::to_string(ctx.numVars) + " variables and " + std::to_string(ctx.numClauses) + " caluses");
 #endif
-                        readFormula<literal_type>();
-                        break;
-                    default:
-                        errstr << "[ ERROR ] Bad format!!!\n";
-                        exit(1);
+                            formula.resize(ctx.numClauses);
+                            readFormula<Context>(ctx, formula);
+                            break;
+                        default:
+                            errstr << "[ ERROR ] Bad format!!!\n";
+                            exit(1);
+                    }
                 }
             }
-        }
 
     private:
-        template <typename literal_type>
-        void readFormula() const
-        {
-            literal_type v1;
-            std::vector<literal_type> clause;
-            while (istr >> v1)
+        template <typename Context, typename Formula>
+            void readFormula(Context& ctx, Formula& formula) const
             {
-                if (!v1)
+                typedef typename Context::literal_type literal_type;
+
+                literal_type v1;
+                for (uint32_t idx = 0; idx < ctx.numClauses; ++idx)
                 {
-                    printComment(std::accumulate(clause.begin(), clause.end(), std::string{},
-                                [&](const std::string& s, const decltype(v1)& i)
-                                { return s + " " + std::to_string(i); }));
-                    clause.clear();
-                    continue;
+                    std::vector<literal_type> clause;
+                    while (istr >> v1)
+                    {
+                        if (!v1) break;
+                        clause.push_back(v1);
+                    }
+                    formula[idx].createClause(std::move(clause));
                 }
-                clause.push_back(v1);
             }
-        }
 
         ISTR& istr;
         OSTR& ostr;
